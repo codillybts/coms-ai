@@ -6,10 +6,17 @@ Built for B2B solo founders and salespeople running outbound at/for small busine
 
 ## Requirements
 
-- **Claude Code.** Built mainly for the Code tab in the Claude desktop app. The command-line version works too.
+- **The Claude desktop app** (its Code tab). See "Where to run it" below.
 - **A claude.ai plan that includes artifacts** and custom connectors.
 - **A Smartlead account** for sending and the master inbox. (Other sending tools can be used for parts of the system, but will require an overhaul of the system which can be instructed via Claude Code)
 - **Separate domains and mailboxes** for cold email. The skill helps you plan and set these up.
+
+## Where to run it
+
+**Use the Claude desktop app.** COMS AI is built for, and tested in, the Code tab of the Claude desktop app. Your CRM runs as a private artifact inside the app (and on claude.ai), and the setup, lead searches and syncs run in the Code tab next to it.
+
+- **Terminal (Claude Code in a command line):** not tested. Parts may work, but it isn't supported, and the CRM itself still has to be opened in the desktop app or on claude.ai.
+- **Self-hosted:** you can run it on your own setup, but the agents and drafting still need Claude to do the work. That means either running it in a Claude Code cloud session or paying for Claude API credits. Expect to adapt the setup yourself; ask Claude to help.
 
 ## Install
 
@@ -35,7 +42,7 @@ COMS AI never connects to GitHub and never checks for updates. Once it's in your
 ## Set it up
 
 1. Make a folder for your outbound work, for example `~/Documents/COMS AI`.
-2. Open Claude Code in that folder.
+2. In the Claude desktop app, open the Code tab and pick that folder.
 3. Say: **set up COMS AI**
 
 Claude then walks you through seven steps. You can stop at any point and pick up later; your answers are saved in `coms-profile.json` in that folder.
