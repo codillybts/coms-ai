@@ -1,6 +1,6 @@
-# COMS AI
+# Outbound 2.0 (COMS AI)
 
-**AI Cold Outbound Management System.** A Claude Code skill that sets up and runs cold outbound for your business: sending infrastructure, a reply agent that writes in your voice, lead-finding agents, and your own private CRM and master inbox, all inside Claude.
+** The AI Cold Outbound Management System.** A Claude Code skill that sets up and runs cold outbound for your business: sending infrastructure, a reply agent that writes in your voice, lead-finding agents, and your own private CRM and master inbox, all inside Claude.
 
 Built for solo founders and people running marketing or outbound at small businesses. Agencies can use it too: it supports more than one business.
 
