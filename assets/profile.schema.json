@@ -1,0 +1,425 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://coms-ai.local/profile.schema.json",
+  "title": "COMS AI profile (coms-profile.json)",
+  "description": "Everything the setup interview collects. Lives in the user's working folder. Never store secrets here: API keys and connector URLs go in .env or in claude.ai connector settings, and this file only names them.",
+  "type": "object",
+  "required": ["schema_version", "app", "businesses"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": { "type": "integer", "const": 1 },
+    "created_at": { "type": "string", "format": "date-time" },
+    "updated_at": { "type": "string", "format": "date-time" },
+    "setup": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "mode": { "enum": ["full", "quick"], "default": "full" },
+        "current_phase": { "type": "integer", "minimum": 0, "maximum": 7 },
+        "completed_phases": { "type": "array", "items": { "type": "integer", "minimum": 0, "maximum": 7 } },
+        "skipped_questions": { "type": "array", "items": { "type": "string" }, "description": "Question ids the user skipped, so Claude can come back to them." },
+        "defaulted_questions": { "type": "array", "items": { "type": "string" }, "description": "Question ids where the user chose 'decide for me'." },
+        "profile_confirmed": { "type": "boolean", "default": false }
+      }
+    },
+    "operator": {
+      "type": "object",
+      "description": "The person running COMS AI.",
+      "additionalProperties": false,
+      "properties": {
+        "role": { "enum": ["solo_founder", "marketing_lead", "sales_lead", "agency", "other"] },
+        "uses_for": { "enum": ["own_business", "clients", "both"], "default": "own_business" },
+        "country": { "type": "string" },
+        "timezone": { "type": "string", "description": "IANA timezone, for example America/Chicago." },
+        "working_folder": { "type": "string", "description": "Absolute path of the folder that holds this file, .env and voice samples." }
+      }
+    },
+    "app": {
+      "type": "object",
+      "description": "How the CRM looks. This becomes the user's own master inbox.",
+      "required": ["display_name"],
+      "additionalProperties": false,
+      "properties": {
+        "display_name": { "type": "string", "default": "COMS AI" },
+        "logo_file": { "type": "string", "description": "Local path of the logo the user uploaded, if any." },
+        "logo_asset_url": { "type": "string", "description": "URL returned after uploading the logo to the CRM's asset store." },
+        "brand_colors": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+          "maxItems": 3,
+          "description": "First color is the main accent."
+        }
+      }
+    },
+    "crm": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "artifact_url": { "type": "string", "description": "claude.ai artifact URL of the published CRM." },
+        "connector_name": { "type": "string", "default": "Smartlead" },
+        "template_version": { "type": "string" },
+        "published_at": { "type": "string", "format": "date-time" }
+      }
+    },
+    "secrets": {
+      "type": "object",
+      "description": "Names only. Values live in .env or in claude.ai connector settings.",
+      "additionalProperties": false,
+      "properties": {
+        "env_file": { "type": "string", "default": ".env" },
+        "keys": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "purpose"],
+            "additionalProperties": false,
+            "properties": {
+              "name": { "type": "string", "pattern": "^[A-Z][A-Z0-9_]*$", "description": "Environment variable name, for example VERIFIER_API_KEY." },
+              "purpose": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "businesses": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/business" }
+    },
+    "active_business_id": { "type": "string" }
+  },
+  "$defs": {
+    "money": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "amount": { "type": "number", "minimum": 0 },
+        "currency": { "type": "string", "default": "USD" }
+      }
+    },
+    "string_list": { "type": "array", "items": { "type": "string" } },
+    "business": {
+      "type": "object",
+      "required": ["id", "name"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9-]+$", "description": "Short slug, for example acme-desk." },
+        "name": { "type": "string" },
+        "website": { "type": "string" },
+        "logo_asset_url": { "type": "string" },
+        "accent_color": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" },
+
+        "basics": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "what_you_sell": { "type": "string", "description": "One or two plain sentences." },
+            "pricing_model": { "enum": ["one_time", "subscription", "retainer", "usage_based", "custom_quote", "other"] },
+            "price_range": { "type": "string" },
+            "avg_deal_size": { "$ref": "#/$defs/money" },
+            "sales_cycle": { "enum": ["same_day", "under_2_weeks", "2_to_8_weeks", "2_to_6_months", "over_6_months"] },
+            "how_deals_close": { "enum": ["call_then_proposal", "demo_then_trial", "self_serve_signup", "quote_then_site_visit", "other"] },
+            "how_deals_close_notes": { "type": "string" },
+            "call_to_action": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "type": { "enum": ["book_call", "reply", "sign_up", "link", "other"], "default": "reply" },
+                "wording": { "type": "string", "description": "How the ask is phrased, for example 'Worth a quick chat?'" },
+                "calendar_link": { "type": "string" },
+                "link_url": { "type": "string" }
+              }
+            }
+          }
+        },
+
+        "icp": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "industries": { "$ref": "#/$defs/string_list" },
+            "company_size": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "employees_min": { "type": "integer", "minimum": 0 },
+                "employees_max": { "type": "integer", "minimum": 0 },
+                "revenue_range": { "type": "string" }
+              }
+            },
+            "geographies": { "$ref": "#/$defs/string_list" },
+            "territory": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "label": { "type": "string" },
+                "country": { "type": "string" },
+                "level": { "enum": ["us", "states", "counties", "countries"] },
+                "states": { "type": "array", "items": { "type": "string", "pattern": "^[0-9]{2}$" } },
+                "counties": { "type": "array", "items": { "type": "string", "pattern": "^[0-9]{5}$" } },
+                "countries": { "$ref": "#/$defs/string_list" }
+              }
+            },
+            "titles": { "$ref": "#/$defs/string_list" },
+            "seniority": { "$ref": "#/$defs/string_list" },
+            "buying_triggers": { "$ref": "#/$defs/string_list" },
+            "disqualifiers": { "$ref": "#/$defs/string_list" },
+            "do_not_contact": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "domains": { "$ref": "#/$defs/string_list" },
+                "companies": { "$ref": "#/$defs/string_list" },
+                "emails": { "$ref": "#/$defs/string_list" },
+                "exclude_current_customers": { "type": "boolean", "default": true },
+                "exclude_competitors": { "type": "boolean", "default": true },
+                "notes": { "type": "string" }
+              }
+            }
+          }
+        },
+
+        "offer": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "core_problem": { "type": "string" },
+            "core_offer": { "type": "string" },
+            "proof": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "type": { "enum": ["case_study", "result", "testimonial", "customer_logo", "other"] },
+                  "summary": { "type": "string" },
+                  "can_name_customer": { "type": "boolean", "default": false },
+                  "source": { "type": "string" }
+                }
+              }
+            },
+            "differentiators": { "$ref": "#/$defs/string_list" },
+            "objections": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "objection": { "type": "string" },
+                  "answer": { "type": "string" }
+                }
+              }
+            },
+            "risk_reversal": { "type": "string" },
+            "free_resource": { "type": "string" }
+          }
+        },
+
+        "integrations": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "calendar": { "type": "object", "additionalProperties": false, "properties": { "tool": { "type": "string" }, "connected": { "type": "boolean", "default": false } } },
+            "crm": { "type": "object", "additionalProperties": false, "properties": { "tool": { "type": "string" }, "sync": { "$ref": "#/$defs/string_list" }, "connected": { "type": "boolean", "default": false } } }
+          }
+        },
+
+        "inbound": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "on": { "type": "boolean", "default": false },
+            "source": { "type": "string" },
+            "how": { "type": "string" }
+          }
+        },
+
+        "tools": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "sending_tool": { "type": "string", "default": "Smartlead" },
+            "domains_and_mailboxes_provider": { "type": "string" },
+            "existing_domains_count": { "type": "integer", "minimum": 0 },
+            "existing_mailboxes_count": { "type": "integer", "minimum": 0 },
+            "current_crm": { "type": "string" },
+            "lead_sources": { "$ref": "#/$defs/string_list" },
+            "scraping_and_enrichment": { "$ref": "#/$defs/string_list" },
+            "verifier": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "name": { "type": "string" },
+                "env_var": { "type": "string", "pattern": "^[A-Z][A-Z0-9_]*$" }
+              }
+            },
+            "calendar_link": { "type": "string" },
+            "linkedin_tools": { "$ref": "#/$defs/string_list" }
+          }
+        },
+
+        "numbers": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "current_daily_sends": { "type": "integer", "minimum": 0 },
+            "reply_rate_pct": { "type": "number", "minimum": 0, "maximum": 100 },
+            "positive_reply_rate_pct": { "type": "number", "minimum": 0, "maximum": 100 },
+            "meetings_per_month_now": { "type": "integer", "minimum": 0 }
+          }
+        },
+
+        "goals": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "meetings_per_month": { "type": "integer", "minimum": 0 },
+            "daily_new_leads": { "type": "integer", "minimum": 0, "default": 25 },
+            "start_by": { "type": "string", "format": "date" }
+          }
+        },
+
+        "channels": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "email": { "type": "boolean", "default": true },
+            "linkedin": { "type": "boolean", "default": false },
+            "linkedin_tools": { "type": "array", "items": { "enum": ["heyreach", "gojiberry", "own_persona", "manual"] }, "default": [] }
+          }
+        },
+
+        "voice": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "tone": { "enum": ["friendly", "direct", "consultative", "playful", "formal"] },
+            "formality": { "enum": ["casual", "neutral", "formal"], "default": "neutral" },
+            "email_length": { "enum": ["very_short", "short", "medium"], "default": "short" },
+            "greeting": { "type": "string" },
+            "sign_off": { "type": "string" },
+            "sender": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "name": { "type": "string" },
+                "title": { "type": "string" },
+                "signature": { "type": "string" }
+              }
+            },
+            "banned_words": { "$ref": "#/$defs/string_list" },
+            "liked_examples": { "$ref": "#/$defs/string_list" },
+            "samples_folder": { "type": "string", "default": "voice-samples" },
+            "rules_source": { "enum": ["default_best_practice", "own_voice", "mixed"], "default": "default_best_practice" },
+            "rules": { "$ref": "#/$defs/string_list" }
+          }
+        },
+
+        "compliance": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "sender_country": { "type": "string" },
+            "target_regions": { "$ref": "#/$defs/string_list" },
+            "mailing_address": { "type": "string", "description": "The business's physical postal address for email footers." },
+            "opt_out_wording": { "type": "string", "default": "If this isn't relevant, reply \"no thanks\" and I won't reach out again." },
+            "laws_considered": { "$ref": "#/$defs/string_list" }
+          }
+        },
+
+        "team": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "shared": { "type": "boolean", "default": false },
+            "approver": { "type": "string", "description": "Who approves replies before they go out." },
+            "senders": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "name": { "type": "string" },
+                  "title": { "type": "string" },
+                  "mailboxes": { "type": "integer", "minimum": 0 }
+                }
+              }
+            },
+            "auto_send": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "enabled": { "type": "boolean", "default": false },
+                "allowed_categories": { "$ref": "#/$defs/string_list" }
+              }
+            }
+          }
+        },
+
+        "infrastructure": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "sending_provider": { "type": "string", "default": "Smartlead" },
+            "sending_via_recommended_link": { "type": "boolean" },
+            "domains_provider": { "type": "string", "default": "InboxKit" },
+            "domains_via_recommended_link": { "type": "boolean" },
+            "planned_domains": { "type": "integer", "minimum": 0 },
+            "planned_mailboxes": { "type": "integer", "minimum": 0 },
+            "sends_per_mailbox_per_day": { "type": "integer", "minimum": 1, "default": 25 },
+            "warmup_start_date": { "type": "string", "format": "date" },
+            "cold_send_start_date": { "type": "string", "format": "date" },
+            "open_tracking": { "type": "boolean", "default": false },
+            "link_tracking": { "type": "boolean", "default": false },
+            "plain_text": { "type": "boolean", "default": true },
+            "sequence_steps": { "type": "integer", "minimum": 1, "default": 3 },
+            "follow_up_gaps_days": { "type": "array", "items": { "type": "integer", "minimum": 1 }, "default": [3, 5] }
+          }
+        },
+
+        "linkedin": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "heyreach_via_recommended_link": { "type": "boolean" },
+            "heyreach_connected": { "type": "boolean" },
+            "gojiberry_via_recommended_link": { "type": "boolean" },
+            "gojiberry_connected": { "type": "boolean" },
+            "persona": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "name": { "type": "string" },
+                "instructions": { "type": "string" }
+              }
+            },
+            "daily_connection_limit": { "type": "integer", "minimum": 0 },
+            "daily_message_limit": { "type": "integer", "minimum": 0 }
+          }
+        },
+
+        "pipeline": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "stages": {
+              "$ref": "#/$defs/string_list",
+              "default": ["New reply", "Interested", "Meeting booked", "Proposal sent", "Won", "Lost"]
+            },
+            "tags": { "$ref": "#/$defs/string_list" }
+          }
+        },
+
+        "routine": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "morning_brief": { "type": "boolean", "default": false },
+            "morning_brief_time": { "type": "string", "pattern": "^[0-2][0-9]:[0-5][0-9]$" },
+            "scheduled_lead_searches": { "type": "boolean", "default": false }
+          }
+        }
+      }
+    }
+  }
+}
