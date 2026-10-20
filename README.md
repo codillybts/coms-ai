@@ -2,7 +2,7 @@
 
 ** The AI Cold Outbound Management System.** A Claude Code skill that sets up and runs cold outbound for your business: sending infrastructure, a reply agent that writes in your voice, lead-finding agents, and your own private CRM and master inbox, all inside Claude.
 
-Built for solo founders and people running marketing or outbound at small businesses. Agencies can use it too: it supports more than one business.
+Built for B2B solo founders and salespeople running outbound at/for small businesses. It support agency usage as well with the ability to run multiple different businesses outbound seamlessly. 
 
 ## Requirements
 
