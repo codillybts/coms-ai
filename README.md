@@ -17,11 +17,12 @@ Pick one option. Both put the skill in `~/.claude/skills/coms-ai`.
 
 ### Option A: download the zip
 
-1. Download `coms-ai.zip` from the [Releases page](https://github.com/codillybts/coms-ai/releases), or use the green "Code" button, then "Download ZIP".
-2. Unzip it.
-3. Rename the unzipped folder to `coms-ai` if it has a different name.
-4. Move it to `~/.claude/skills/coms-ai`. (On a Mac, in Finder press Cmd+Shift+G and type `~/.claude/skills`. Create the `skills` folder if it does not exist.)
-5. Check that `~/.claude/skills/coms-ai/SKILL.md` exists.
+1. Download **[coms-ai.zip](https://github.com/codillybts/coms-ai/releases/latest/download/coms-ai.zip)** (always the latest release).
+2. Unzip it. You get a folder named `coms-ai`.
+3. Move that folder to `~/.claude/skills/coms-ai`. (On a Mac, in Finder press Cmd+Shift+G and type `~/.claude/skills`. Create the `skills` folder if it does not exist.)
+4. Check that `~/.claude/skills/coms-ai/SKILL.md` exists.
+
+Use this zip, not GitHub's green "Code > Download ZIP" button: that one unzips as `coms-ai-main`, and the folder must be named `coms-ai`. If you already used it, rename the folder to `coms-ai`.
 
 ### Option B: git clone
 
