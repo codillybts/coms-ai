@@ -60,14 +60,22 @@ COMS AI has three parts that work together:
 - **Claude Code** is the back office. This is where the skill lives. It runs the setup, the lead-finding agents and the syncs with your other tools, and it changes anything you ask for.
 
 ```mermaid
-flowchart LR
-  you([You]) --> crm["Your CRM<br/>private claude.ai app"]
-  crm <-->|replies, sends, campaigns| sl["Smartlead<br/>sending + master inbox"]
-  sl <--> mb["Your mailboxes<br/>on separate domains"]
-  mb <--> pros([Prospects])
-  cc["Claude Code<br/>+ the COMS AI skill"] -->|leads, meetings, LinkedIn, inbound| crm
-  cc <--> tools["Optional tools<br/>calendar, HeyReach, GojiBerry,<br/>your CRM, scrapers, email checker"]
+flowchart TB
+  you([You])
+  subgraph daily [Every day]
+    crm["Your CRM<br/>private app in claude.ai"]
+  end
+  subgraph engine [Sending]
+    sl["Smartlead<br/>campaigns + master inbox"] --- mb["Your mailboxes<br/>separate domains"]
+  end
+  subgraph office [Back office]
+    cc["Claude Code<br/>+ COMS AI skill"] --- tools["Optional tools<br/>calendar · LinkedIn · your CRM<br/>scrapers · email checker"]
+  end
+  you --> crm
   you --> cc
+  crm <-->|"replies, sends, campaigns"| sl
+  cc -->|"new leads, meetings, syncs"| crm
+  mb <--> pros([Prospects])
 ```
 
 ### Finding leads
