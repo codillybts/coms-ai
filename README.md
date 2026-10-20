@@ -1,14 +1,14 @@
 # Outbound 2.0 (COMS AI)
 
-** The AI Cold Outbound Management System.** A Claude Code skill that sets up and runs cold outbound for your business: sending infrastructure, a reply agent that writes in your voice, lead-finding agents, and your own private CRM and master inbox, all inside Claude.
+**The AI Cold Outbound Management System.** A Claude Code skill that sets up and runs cold outbound for your business: sending infrastructure, a reply agent that writes in your voice, lead-finding agents, and your own private CRM and master inbox, all inside Claude.
 
-Built for B2B solo founders and salespeople running outbound at/for small businesses. It support agency usage as well with the ability to run multiple different businesses outbound seamlessly. 
+Built for B2B solo founders and salespeople running outbound at/for small businesses. It supports agency usage as well with the ability to run multiple different businesses outbound seamlessly. 
 
 ## Requirements
 
 - **Claude Code.** Built mainly for the Code tab in the Claude desktop app. The command-line version works too.
 - **A claude.ai plan that includes artifacts** and custom connectors.
-- **A Smartlead account** for sending and the master inbox. (Other sending tools can be used for parts of the system, but will require an overhaul of the system which can be instructued via Claude Code)
+- **A Smartlead account** for sending and the master inbox. (Other sending tools can be used for parts of the system, but will require an overhaul of the system which can be instructed via Claude Code)
 - **Separate domains and mailboxes** for cold email. The skill helps you plan and set these up.
 
 ## Install
