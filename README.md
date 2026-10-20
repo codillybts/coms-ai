@@ -8,7 +8,7 @@ Built for solo founders and people running marketing or outbound at small busine
 
 - **Claude Code.** Built mainly for the Code tab in the Claude desktop app. The command-line version works too.
 - **A claude.ai plan that includes artifacts** and custom connectors.
-- **A Smartlead account** for sending and the master inbox. (Other sending tools can be used for parts of the system, but the inbox, campaign and mailbox screens need Smartlead.)
+- **A Smartlead account** for sending and the master inbox. (Other sending tools can be used for parts of the system, but will require an overhaul of the system which can be instructued via Claude Code)
 - **Separate domains and mailboxes** for cold email. The skill helps you plan and set these up.
 
 ## Install
@@ -188,7 +188,7 @@ assets/
 
 ## Affiliate disclosure
 
-COMS AI may recommend tools during setup using affiliate links: Smartlead, InboxKit, HeyReach, and GojiBerry (HeyReach and GojiBerry only if you do LinkedIn outreach). If you sign up through these links, the project may earn a commission at no extra cost to you. Every recommendation comes with an "I already have my own / I use a different service" option. By downloading and using this skill, you agree to these terms.
+COMS AI may recommend tools during setup using affiliate links: Smartlead, InboxKit, HeyReach, and GojiBerry (HeyReach and GojiBerry only if you do LinkedIn outreach). If you sign up through these links, the project may earn a commission at no extra cost to you. Every recommendation comes with an "I already have my own / I use a different service" option. By downloading and using this skill, you agree to these terms. This helps us keep the project free of charge. 
 
 ## No liability
 
